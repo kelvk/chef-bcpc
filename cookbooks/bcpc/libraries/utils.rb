@@ -80,13 +80,20 @@ end
 def search_nodes(key, value)
     if key == "recipe"
         results = search(:node, "recipes:bcpc\\:\\:#{value} AND chef_environment:#{node.chef_environment}")
+        results.map! { |x| x['hostname'] == node['hostname'] ? node : x }
+        if not results.include?(node) and node.run_list.expand.recipes.include?("bcpc::#{value}")
+            results.push(node)
+        end
     elsif key == "role"
-        results = search(:node, "roles:#{value} AND chef_environment:#{node.chef_environment}")
+        results = search(:node, "#{key}:#{value} AND chef_environment:#{node.chef_environment}")
+        results.map! { |x| x['hostname'] == node['hostname'] ? node : x }
+        if not results.include?(node) and node.run_list.expand.roles.include?(value)
+            results.push(node)
+        end
     else
         raise("Invalid search key: #{key}")
     end
 
-    results.map! { |x| x['hostname'] == node['hostname'] ? node : x }
     return results.sort! { |a, b| a['hostname'] <=> b['hostname'] }
 end
 
