@@ -41,6 +41,23 @@ if node['bcpc']['enabled']['logging'] then
         action :install
     end
 
+    cookbook_file "/usr/local/bin/ess-shard-rebalancing" do
+        source "ess-shard-rebalancing"
+        owner "root"
+        group "root"
+        mode 00755
+    end
+
+    template "/usr/local/bin/ess-restart-wrapper" do
+        source "ess-restart-wrapper.erb"
+        owner "root"
+        group "root"
+        mode 00755
+        variables(
+            :host => node['bcpc']['management']['ip']
+        )
+    end
+
     template "/etc/default/elasticsearch" do
         source "elasticsearch-default.erb"
         owner "root"
@@ -54,7 +71,10 @@ if node['bcpc']['enabled']['logging'] then
     end
 
     service "elasticsearch" do
-        action [:enable, :start]
+        action [:enable]
+        supports :restart => true, :status => true
+        status_command "service elasticsearch status"
+        restart_command "/usr/local/bin/ess-restart-wrapper"
     end
 
     template "/etc/elasticsearch/elasticsearch.yml" do

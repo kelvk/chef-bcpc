@@ -1,0 +1,10 @@
+#!/bin/bash
+
+rebalance="/usr/local/bin/ess-shard-rebalancing --host <%= @host %>"
+if service elasticsearch status; then
+    $rebalance --no && service elasticsearch restart || exit 1
+else
+    service elasticsearch restart || exit 1
+fi
+
+sleep 6 && $rebalance --yes || exit 1
