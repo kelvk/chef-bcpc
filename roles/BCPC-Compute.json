@@ -24,6 +24,3 @@
     "description": "Run list for a general compute function. Building block, not designed as an applied role.",
     "chef_type": "role"
 }
-
-
-
