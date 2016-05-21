@@ -144,6 +144,34 @@ if [ ! -f python-graphite-web_${VER_GRAPHITE_WEB}_all.deb ]; then
 fi
 FILES="python-graphite-web_${VER_GRAPHITE_WEB}_all.deb $FILES"
 
+###### Install golang
+curl 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x308C15A29AD198E9' | sudo apt-key add -
+echo 'deb http://ppa.launchpad.net/gophers/archive/ubuntu trusty main' > /etc/apt/sources.list.d/golang.list
+apt-get update
+apt-get -y --force-yes install golang-1.5
+export PATH=$PATH:/usr/lib/go-1.5/bin
+# Create Go workspace
+export GOPATH=$FILECACHE_MOUNT_POINT/go
+for dir in src bin pkg; do
+  if [ ! -d $GOPATH/$dir ]; then
+    mkdir -p $GOPATH/$dir
+  fi
+done
+###### golang install ends
+
+# Build Prometheus Graphite exporter
+if [ ! -f graphite_exporter ]; then
+  if [ ! -d $GOPATH/src/github.com/prometheus ]; then
+    mkdir -p $GOPATH/src/github.com/prometheus
+  fi
+  GRAPHITE_EXPORTER_SRC=$GOPATH/src/github.com/prometheus/graphite_exporter
+  git clone $FILECACHE_MOUNT_POINT/graphite_exporter $GRAPHITE_EXPORTER_SRC
+  git -C $GRAPHITE_EXPORTER_SRC checkout $VER_GRAPHITE_EXPORTER
+  make -C $GRAPHITE_EXPORTER_SRC
+  cp -v $GRAPHITE_EXPORTER_SRC/graphite_exporter .
+  rm -rf $GRAPHITE_EXPORTER_SRC
+fi
+
 # Rally has a number of dependencies. Some of the dependencies are in apt by default but some are not. Those that
 # are not are built here.
 
