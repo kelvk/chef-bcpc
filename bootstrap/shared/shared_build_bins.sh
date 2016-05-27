@@ -145,11 +145,11 @@ fi
 FILES="python-graphite-web_${VER_GRAPHITE_WEB}_all.deb $FILES"
 
 ###### Install golang
-curl 'http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0x308C15A29AD198E9' | sudo apt-key add -
-echo 'deb http://ppa.launchpad.net/gophers/archive/ubuntu trusty main' > /etc/apt/sources.list.d/golang.list
-apt-get update
-apt-get -y --force-yes install golang-1.5
-export PATH=$PATH:/usr/lib/go-1.5/bin
+export PATH=$PATH:/usr/local/go/bin
+if [ `go version 2>/dev/null | grep -c $VER_GOLANG` != 1 ]; then
+  test -d /usr/local/go && rm -rf /usr/local/go
+  tar zxf $FILECACHE_MOUNT_POINT/go${VER_GOLANG}.linux-amd64.tar.gz -C /usr/local
+fi
 # Create Go workspace
 export GOPATH=$FILECACHE_MOUNT_POINT/go
 for dir in src bin pkg; do
