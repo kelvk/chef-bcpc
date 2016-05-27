@@ -39,7 +39,7 @@ template "/etc/ufw/before.rules" do
     notifies :restart, "service[ufw]", :delayed
 end
 
-node["bcpc"]["monitoring"]["cidr"].each do |cidr|
+node["bcpc"]["monitoring"]["cidrs"].each do |cidr|
   node['bcpc']['monitoring']['agent_tcp_ports'].each do |port|
     bash "setup-allow-rules-ufw-#{cidr}-#{port}" do
       user 'root'

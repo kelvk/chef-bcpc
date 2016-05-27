@@ -10,9 +10,9 @@ default['bcpc']['monitoring']['provider'] = false
 default['bcpc']['monitoring']['vip'] = "10.17.1.16"
 # IP of monitoring endpoints outside of cluster. This should typically point to
 # the monitoring cluster's VIP.
-default['bcpc']['monitoring']['ip'] = ["10.17.1.16"]
+default['bcpc']['monitoring']['ips'] = ["10.17.1.16"]
 # CIDR of monitoring endpoints outside of cluster.
-default['bcpc']['monitoring']['cidr'] = ["10.17.1.0/24"]
+default['bcpc']['monitoring']['cidrs'] = ["10.17.1.0/24"]
 # Agent TCP ports that monitoring servers need to reach
 default['bcpc']['monitoring']['agent_tcp_ports'] = [10050, 9108]
 # List of monitoring clients external to cluster that we are monitoring

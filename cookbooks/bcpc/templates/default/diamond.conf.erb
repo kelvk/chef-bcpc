@@ -62,7 +62,7 @@ days = 7
 
 <% if node['bcpc']['monitoring']['prometheus_exporter']-%>
 [[MultiGraphiteHandler]]
-host = <%= node['bcpc']['management']['ip'] %>,<%= node['bcpc']['monitoring']['ip'].sort.join(',') %>
+host = <%= node['bcpc']['management']['ip'] %>,<%= node['bcpc']['monitoring']['ips'].sort.join(',') %>
 port = 2013
 timeout = 15
 batch = 512
