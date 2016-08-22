@@ -158,4 +158,11 @@ if node['bcpc']['enabled']['monitoring'] then
         mode "00755"
         only_if do get_cached_head_node_names.include?(node['hostname']) end
     end
+
+    cookbook_file '/usr/local/bin/ceph_health_filter.sh' do
+      source 'ceph_health_filter.sh'
+      owner 'root'
+      group 'root'
+      mode 00755
+    end
 end
