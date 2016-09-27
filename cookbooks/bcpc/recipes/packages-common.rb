@@ -42,6 +42,7 @@ cookbook_file '/etc/dpkg/dpkg.cfg.d/managed_config_files' do
   mode   00644
 end
 
+package 'jq'
 package 'patch'
 package 'sshpass'  # GitHub #112 -- required for nodessh.sh
 # logtail is used for some zabbix checks

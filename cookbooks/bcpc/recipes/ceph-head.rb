@@ -76,20 +76,25 @@ ruby_block "wait-for-mon-quorum" do
     end
 end
 
-%w{get_monstatus if_leader if_not_leader if_quorum if_not_quorum}.each do |script|
-    template "/usr/local/bin/#{script}" do
-        source "ceph-#{script}.erb"
-        mode 0755
-        owner "root"
-        group "root"
-    end
+%w(quorum_status monstatus).each do |script|
+  template "/etc/sudoers.d/#{script}" do
+    source "sudoers-#{script}.erb"
+    mode 0440
+    owner 'root'
+    group 'root'
+  end
 end
 
-template "/etc/sudoers.d/monstatus" do
-    source "sudoers-monstatus.erb"
-    user "root"
-    group "root"
-    mode 00440
+%w(
+  get_quorum_status get_monstatus
+  if_leader if_not_leader if_quorum if_not_quorum
+).each do |script|
+  template "/usr/local/bin/#{script}" do
+    source "ceph-#{script}.erb"
+    mode 0755
+    owner 'root'
+    group 'root'
+  end
 end
 
 bash "initialize-ceph-admin-and-osd-config" do
