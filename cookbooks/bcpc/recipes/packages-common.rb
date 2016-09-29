@@ -26,6 +26,7 @@ if node['bcpc']['enabled']['always_update_package_lists'] then
   end
 end
 
+package 'jq'
 package 'patch'
 package 'sshpass'  # GitHub #112 -- required for nodessh.sh
 # logtail is used for some zabbix checks
