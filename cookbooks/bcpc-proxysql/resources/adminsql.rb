@@ -20,5 +20,13 @@
 actions :execute
 default_action :execute
 
+attribute :admin_hostname,
+          :kind_of => String,
+          :default => \
+          node['bcpc-proxysql']['admin']['config']['proxysql_hostname']
+attribute :admin_port,
+          :kind_of => String,
+          :default => \
+          node['bcpc-proxysql']['admin']['config']['proxysql_port'].to_s
 # SQL query to execute
 attribute :query, :name_attribute => true, :kind_of => String, :required => true

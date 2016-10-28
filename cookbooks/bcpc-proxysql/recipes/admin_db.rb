@@ -36,6 +36,17 @@ node['bcpc-proxysql']['mysql_variables'].each do |k, v|
   end
 end
 
+node['bcpc-proxysql']['generated']['mysql_servers'].each do |server|
+  bcpc_proxysql_adminsql "update-mysql_servers-for-#{server['address']}" do
+    query "UPDATE mysql_servers SET \
+           port = #{server['port']}, \
+           weight = #{server['weight']}, \
+           max_connections = #{server['max_connections']} , \
+           max_latency_ms = #{server['max_latency_ms']} \
+           WHERE hostname = '#{server['address']}';"
+  end
+end
+
 bcpc_proxysql_adminsql 'setup-scheduler-for-backend-health-checks' do
   query "REPLACE INTO scheduler VALUES (1, 1, \
     #{node['bcpc-proxysql']['check']['interval']}, \

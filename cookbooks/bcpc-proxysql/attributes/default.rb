@@ -18,11 +18,17 @@ default['bcpc-proxysql']['admin']['config'] = {
   'pxc_app_password' => make_config('proxysql-proxy-password', secure_password)
 }
 default['bcpc-proxysql']['admin_variables'] = {}
+default['bcpc-proxysql']['mysql_servers'] = {
+  'port' => 3306,
+  'weight' => 1,
+  'max_connections' => 3_000,
+  'max_latency_ms' => 0
+}
 default['bcpc-proxysql']['mysql_variables'] = {
   'connect_timeout_server' => 5_000,
   'default_query_timeout' => 1_800_000,
   'long_query_time' => 10_000,
-  'max_connections' => 3_000,
+  'max_connections' => 5_000,
   'monitor_password' => \
     node['bcpc-proxysql']['admin']['config']['monitor_password'],
   'monitor_history' => 600_000,
@@ -54,7 +60,6 @@ default['bcpc-proxysql']['mysql_query_rules'] = [
 ]
 default['bcpc-proxysql']['check']['interval'] = 1000
 default['bcpc-proxysql']['check']['script'] = '/usr/bin/proxysql_galera_checker'
-# log rotation required
 default['bcpc-proxysql']['check']['logfile'] = '/var/lib/proxysql/check.log'
 default['bcpc-proxysql']['check']['writers'] = 1
 default['bcpc-proxysql']['check']['writers_are_readers'] = 1

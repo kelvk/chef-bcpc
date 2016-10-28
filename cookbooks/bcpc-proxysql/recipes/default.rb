@@ -50,10 +50,16 @@ heads = get_head_nodes
 heads.each do |h|
   servers.push(
     'address' => h['bcpc']['management']['ip'],
-    'port' => 3306,
-    'hostgroup' => 1
+    'hostgroup' => 1,
+    'port' => node['bcpc-proxysql']['mysql_servers']['port'],
+    'weight' => node['bcpc-proxysql']['mysql_servers']['weight'],
+    'max_connections' => \
+      node['bcpc-proxysql']['mysql_servers']['max_connections'],
+    'max_latency_ms' => \
+      node['bcpc-proxysql']['mysql_servers']['max_latency_ms']
   )
 end
+node.set['bcpc-proxysql']['generated']['mysql_servers'] = servers
 
 admin_variables = {
   'admin_credentials' => \

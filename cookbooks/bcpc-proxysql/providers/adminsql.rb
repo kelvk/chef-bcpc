@@ -26,8 +26,8 @@ use_inline_resources
 
 action :execute do
   envvars = {
-    'MYSQL_HOST' => '127.0.0.1',
-    'MYSQL_TCP_PORT' => '6032',
+    'MYSQL_HOST' => @new_resource.admin_hostname,
+    'MYSQL_TCP_PORT' => @new_resource.admin_port,
     'MYSQL_PWD' => get_config('proxysql-admin-password')
   }
   dbuser = get_config('proxysql-admin-user')
