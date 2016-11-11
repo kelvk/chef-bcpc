@@ -46,12 +46,4 @@ if node['bcpc']['enabled']['logging'] then
         action [:enable, :start]
     end
 
-    bash 'remove-old-kibana-upstart' do
-        code <<-EOH
-            stop kibana
-            rm -f /etc/init/kibana.conf
-        EOH
-        only_if 'test -f /etc/init/kibana.conf'
-    end
-
 end

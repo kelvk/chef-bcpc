@@ -33,7 +33,7 @@ if node['bcpc']['enabled']['logging'] then
     end
 
     package 'elasticsearch' do
-        action :install
+        action :upgrade
     end
 
     cookbook_file "/usr/local/bin/ess-shard-rebalancing" do

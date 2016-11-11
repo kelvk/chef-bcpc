@@ -83,7 +83,7 @@ FILES="diamond.deb $FILES"
 if [ ! -f elasticsearch-plugins.tgz ]; then
   cp -r $FILECACHE_MOUNT_POINT/elasticsearch-head .
   cd elasticsearch-head
-  git archive --output ../elasticsearch-plugins.tgz --prefix head/_site/ $VER_ESPLUGIN
+  git archive --output ../elasticsearch-plugins.tgz --prefix head/ $VER_ESPLUGIN
   cd ..
   rm -rf elasticsearch-head
 fi
