@@ -30,7 +30,7 @@ if node['bcpc']['enabled']['dns']
     variables({
       :database_name      => node['bcpc']['dbname']['pdns'],
       :cluster_domain     => node['bcpc']['cluster_domain'],
-      :reverse_fixed_zone => (node['bcpc']['fixed']['reverse_dns_zone'] || calc_reverse_dns_zone(node['bcpc']['fixed']['cidr'])),
+      :reverse_fixed_zone => (node['bcpc']['fixed']['reverse_dns_zone'] || calc_reverse_dns_zone(node['bcpc']['fixed']['cidr']).first)
     })
     notifies :run, 'ruby_block[powerdns-load-fixed-records]', :immediately
   end

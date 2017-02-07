@@ -9,7 +9,7 @@ INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_re
 -- MySQL does not allow deleting from a table and selecting from that same table in a subquery, so ids of old SOA records are written to a temporary table, records are deleted,
 -- then the temporary table is cleaned up
 CREATE TEMPORARY TABLE soa_records_to_delete_<%=get_config('powerdns-update-timestamp')%> (id int);
-<% [@cluster_domain, @reverse_float_zone, @reverse_fixed_zone, @management_zone].each do |zone| %>
+<% [@cluster_domain, @reverse_float_zone, @reverse_fixed_zone, @management_zone].flatten.each do |zone| %>
 
 -- delete malformed NS record where the content is the management VIP instead of cluster domain
 DELETE FROM <%= @database_name %>.records WHERE type='NS' and content='<%= @management_vip %>';
@@ -47,8 +47,8 @@ INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_re
     ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%=@cluster_domain%>'), name='<%=s_hostname%>-shared.<%=@cluster_domain%>', type='A', content='<%=s_floating_ip%>', bcpc_record_type='STATIC';
 
 INSERT INTO <%= @database_name %>.records (domain_id, name, type, content, bcpc_record_type) VALUES
-    ((SELECT id FROM domains WHERE name='<%= @reverse_float_zone %>'), '<%= s_floating_reverse %>', 'PTR', '<%= s_hostname %>-shared.<%= @cluster_domain %>', 'STATIC')
-    ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%= @reverse_float_zone %>'), name='<%= s_floating_reverse %>', type='PTR', content='<%= s_hostname %>-shared.<%= @cluster_domain %>', bcpc_record_type='STATIC';
+    (get_float_ptr_domain('<%=s_floating_reverse%>'), '<%= s_floating_reverse %>', 'PTR', '<%= s_hostname %>-shared.<%= @cluster_domain %>', 'STATIC')
+    ON DUPLICATE KEY UPDATE domain_id=get_float_ptr_domain('<%=s_floating_reverse%>'), name='<%= s_floating_reverse %>', type='PTR', content='<%= s_hostname %>-shared.<%= @cluster_domain %>', bcpc_record_type='STATIC';
 <% end %>
 
 -- insert A records for certain management/monitoring functions
@@ -80,8 +80,8 @@ INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_re
     ((SELECT id FROM domains WHERE name='<%=@cluster_domain%>'), '<%=s_hostname%>', 'A', '<%=ip.to_s%>', 'STATIC')
     ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%=@cluster_domain%>'), name='<%=s_hostname%>', type='A', content='<%=ip.to_s%>', bcpc_record_type='STATIC';
 INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_record_type) VALUES
-    ((SELECT id FROM domains WHERE name='<%=@reverse_float_zone%>'), '<%=reverse_name%>', 'PTR', '<%=s_hostname%>', 'STATIC')
-    ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%=@reverse_float_zone%>'), name='<%=reverse_name%>', type='PTR', content='<%=s_hostname%>', bcpc_record_type='STATIC';
+    (get_float_ptr_domain('<%=reverse_name%>'), '<%=reverse_name%>', 'PTR', '<%=s_hostname%>', 'STATIC')
+    ON DUPLICATE KEY UPDATE domain_id=get_float_ptr_domain('<%=reverse_name%>'), name='<%=reverse_name%>', type='PTR', content='<%=s_hostname%>', bcpc_record_type='STATIC';
 <% end %>
 
 -- fixed IPs are inserted by another template (look at powerdns-nova recipe)
