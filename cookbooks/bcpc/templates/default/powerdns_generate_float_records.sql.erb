@@ -39,8 +39,8 @@ INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_re
     ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%=@cluster_domain%>'), name='<%=s_hostname%>.<%=@cluster_domain%>', type='A', content='<%=s_management_ip%>', bcpc_record_type='STATIC';
 
 INSERT INTO <%= @database_name %>.records (domain_id, name, type, content, bcpc_record_type) VALUES
-    ((SELECT id FROM domains WHERE name='<%= @management_zone %>'), '<%= s_management_reverse %>', 'PTR', '<%= s_hostname %>.<%= @cluster_domain %>', 'STATIC')
-    ON DUPLICATE KEY UPDATE domain_id=(SELECT id FROM domains WHERE name='<%= @management_zone %>'), name='<%= s_management_reverse %>', type='PTR', content='<%= s_hostname %>.<%= @cluster_domain %>', bcpc_record_type='STATIC';
+    (get_ptr_domain('<%= s_management_reverse %>', <%= @mgmt_octets %>), '<%= s_management_reverse %>', 'PTR', '<%= s_hostname %>.<%= @cluster_domain %>', 'STATIC')
+    ON DUPLICATE KEY UPDATE domain_id=get_ptr_domain('<%= s_management_reverse %>', <%= @mgmt_octets %>), name='<%= s_management_reverse %>', type='PTR', content='<%= s_hostname %>.<%= @cluster_domain %>', bcpc_record_type='STATIC';
 
 INSERT INTO <%=@database_name%>.records (domain_id, name, type, content, bcpc_record_type) VALUES
     ((SELECT id FROM domains WHERE name='<%=@cluster_domain%>'), '<%=s_hostname%>-shared.<%=@cluster_domain%>', 'A' , '<%=s_floating_ip%>', 'STATIC')
