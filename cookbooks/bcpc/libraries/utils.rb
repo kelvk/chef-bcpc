@@ -293,22 +293,23 @@ def ceph_keygen()
     Base64.encode64(key).strip
 end
 
-# Generates an array of classful reverse DNS zone(s) by dividing provided CIDR
-# (min /24) in the form of '1.2.3.0/24'. Allows an optional prefix override to
-# divide the CIDR by that subnet class.
-def calc_reverse_dns_zone(cidr, classless=nil)
-  base_prefix = 24
-  cidr = IPAddress(cidr) # Will throw exception if CIDR is bad.
+def calc_octets_to_drop(cidr)
+  cidr = IPAddress(cidr)
   prefix = cidr.prefix.to_i
-  raise 'Subnet should be at least a /24' unless prefix <= base_prefix
-  if (prefix == 8 || prefix == 16 || prefix == 24) && classless.nil?
-    octets = 4 - prefix / 8 # octets to drop
-    return [cidr.reverse.to_s.split('.')[octets, 5].join('.')]
-  end
+  prefix = 24 if prefix != 8 && prefix != 16
+  4 - prefix / 8 # octets to drop
+end
 
-  # When CIDR is assumed classless, always split it into /24 subnets
-  subnets = cidr.subnet(base_prefix)
-  subnets.map { |x| x.reverse.to_s.split('.')[1, 5].join('.') }
+# Generates an array of classful reverse DNS zone(s) by dividing provided CIDR
+# (min /24) in the form of '1.2.3.0/24'.
+def calc_reverse_dns_zone(cidr)
+  cidr = IPAddress(cidr)
+  prefix = cidr.prefix.to_i
+  prefix = 24 if prefix != 8 && prefix != 16
+  subnets = cidr.subnet(prefix) # array of /24 subnets
+  octets = 4 - prefix / 8 # octets to drop
+  subnets.map {
+    |x| x.reverse.to_s.split('.')[octets, x.reverse.length].join('.') }
 end
 
 # We do not have net/ping, so just call out to system and check err value.
