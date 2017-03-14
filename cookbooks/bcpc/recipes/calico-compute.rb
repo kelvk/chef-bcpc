@@ -81,10 +81,10 @@ bash "disable-neutron-dhcp-agent" do
 end
 
 # service neutron-dhcp-agent stop
-#bash "stop-neutron-dhcp-agent" do
-#   code "service neutron-dhcp-agent stop"
-#   ignore_failure true
-#end
+bash "stop-neutron-dhcp-agent" do
+   code "service neutron-dhcp-agent stop"
+   ignore_failure true
+end
 
 package "calico-dhcp-agent" do
     action :upgrade
