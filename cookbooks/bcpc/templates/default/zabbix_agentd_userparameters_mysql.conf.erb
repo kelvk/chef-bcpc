@@ -12,6 +12,6 @@ UserParameter=mysql.status[*],echo "show global status where Variable_name='$1';
 # 'sum' on data_length or index_length alone needed when we are getting this information for whole database instead of a single table
 UserParameter=mysql.size[*],echo "select sum($(case "$3" in both|"") echo "data_length+index_length";; data|index) echo "$3_length";; free) echo "data_free";; esac)) from information_schema.tables$([[ "$1" = "all" || ! "$1" ]] || echo " where table_schema='$1'")$([[ "$2" = "all" || ! "$2" ]] || echo "and table_name='$2'");" | HOME=/var/lib/zabbix mysql --defaults-file=/etc/mysql/debian.cnf -N
 
-UserParameter=mysql.ping,HOME=/var/lib/zabbix mysqladmin --defaults-file=/etc/mysql/debian.cnf ping | grep -c alive
+UserParameter=mysql.ping,HOME=/var/lib/zabbix mysqladmin --defaults-file=/etc/mysql/debian.cnf ping 2>/dev/null | grep -c alive
 UserParameter=mysql.version,mysql -V
 UserParameter=mysql.slow_queries,/usr/local/bin/mysql_slow_query_check.sh
