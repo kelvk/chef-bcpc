@@ -63,6 +63,11 @@
     "ntp": {
       "servers" : [ "0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org", "3.pool.ntp.org" ]
     },
+    "bcpc-extra": {
+      "postfix": {
+        "enabled": false
+      }
+    },
     "chef_client": {
       "server_url": "http://10.0.100.3:4000",
       "cache_path": "/var/chef/cache",

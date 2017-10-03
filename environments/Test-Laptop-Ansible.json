@@ -96,6 +96,11 @@
       "archive_url": "http://10.0.100.3/ubuntu",
       "include_source_packages": false,
       "security_url": "http://10.0.100.3/ubuntu"
+    },
+    "bcpc-extra": {
+      "postfix": {
+        "enabled": false
+      }
     }
   }
 }
