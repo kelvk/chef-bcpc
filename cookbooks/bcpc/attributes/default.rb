@@ -185,7 +185,7 @@ default['bcpc']['repos']['erlang'] = "http://packages.erlang-solutions.com/ubunt
 default['bcpc']['repos']['ceph'] = "http://download.ceph.com/debian-hammer"
 default['bcpc']['repos']['zabbix'] = "http://repo.zabbix.com/zabbix/2.4/ubuntu"
 default['bcpc']['repos']['mitaka-staging'] = "http://ppa.launchpad.net/ubuntu-cloud-archive/mitaka-staging/ubuntu"
-default['bcpc']['repos']['calico'] = "http://ppa.launchpad.net/project-calico/felix-2.1-testing/ubuntu"
+default['bcpc']['repos']['calico'] = "http://ppa.launchpad.net/project-calico/calico-2.6/ubuntu"
 default['bcpc']['repos']['bird'] = "http://ppa.launchpad.net/cz.nic-labs/bird/ubuntu"
 
 ###########################################
