@@ -13,7 +13,7 @@ column 2: MAC address of first network interface
 column 3: IP address of OS management network
 column 4: IPMI/LOM IP address
 column 5: domain
-column 6: role (bootstrap/head/work/work-ephemeral)
+column 6: role (bootstrap/head/work)
 
 cluster.yaml schema:
 
@@ -56,7 +56,7 @@ def generate_cluster_information(
     into cluster YAML or cluster.txt.
     """
     possible_roles = [
-        'bootstrap', 'head', 'work', 'work-ephemeral', 'reserved']
+        'bootstrap', 'head', 'work', 'reserved']
 
     cluster_info = {'cluster_name': cluster_name, 'nodes': {}}
 
@@ -126,7 +126,7 @@ column 2: MAC address of first network interface
 column 3: IP address of OS management network
 column 4: IPMI/LOM IP address
 column 5: domain
-column 6: role (bootstrap/head/work/work-ephemeral)
+column 6: role (bootstrap/head/work)
 """
 
 def render_cluster_info_as_text(cluster_info):

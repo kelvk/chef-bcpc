@@ -44,7 +44,7 @@
     - name: Let Ceph settle
       pause: minutes=1 prompt="Letting Ceph recover for a minute here"
 
-- hosts: worknodes:ephemeral-worknodes
+- hosts: worknodes
   become: yes
   serial: 1
   tasks:

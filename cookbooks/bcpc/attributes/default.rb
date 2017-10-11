@@ -252,17 +252,9 @@ default['bcpc']['horizon']['disable_panels'] = ['containers']
 
 ###########################################
 #
-#  Misc storage Settings
+#  Metadata Settings
 #
 ###########################################
-#
-# settings pertaining to ephemeral storage via mdadm/LVM
-# (software RAID settings are here for logical grouping)
-default['bcpc']['software_raid']['enabled'] = false
-# define devices to RAID together in the hardware role for a type (e.g., BCPC-Hardware-Virtual)
-default['bcpc']['software_raid']['devices'] = []
-default['bcpc']['software_raid']['md_device'] = '/dev/md/md0'
-default['bcpc']['software_raid']['chunk_size'] = 512
 
 # load a custom vendor driver,
 # e.g. "nova.api.metadata.bcpc_metadata.BcpcMetadata",
@@ -368,7 +360,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 512,
     "disk_gb" => 1,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -377,7 +368,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 2048,
     "disk_gb" => 20,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -386,7 +376,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 4096,
     "disk_gb" => 40,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -395,7 +384,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 8192,
     "disk_gb" => 40,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -404,7 +392,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 16384,
     "disk_gb" => 40,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -413,68 +400,7 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 32768,
     "disk_gb" => 40,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
-    }
-  },
-  "nondurable1.tiny" => {
-    "vcpus" => 1,
-    "memory_mb" => 512,
-    "disk_gb" => 1,
-    "ephemeral_gb" => 5,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable1.small" => {
-    "vcpus" => 1,
-    "memory_mb" => 2048,
-    "disk_gb" => 20,
-    "ephemeral_gb" => 20,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable1.medium" => {
-    "vcpus" => 2,
-    "memory_mb" => 4096,
-    "disk_gb" => 40,
-    "ephemeral_gb" => 40,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable1.large" => {
-    "vcpus" => 4,
-    "memory_mb" => 8192,
-    "disk_gb" => 40,
-    "ephemeral_gb" => 80,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable1.xlarge" => {
-    "vcpus" => 8,
-    "memory_mb" => 16384,
-    "disk_gb" => 40,
-    "ephemeral_gb" => 160,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable1.2xlarge" => {
-    "vcpus" => 16,
-    "memory_mb" => 32768,
-    "disk_gb" => 40,
-    "ephemeral_gb" => 320,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
     }
   },
   "generic2.small" => {
@@ -482,7 +408,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 6144,
     "disk_gb" => 50,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -491,7 +416,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 12288,
     "disk_gb" => 100,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -500,7 +424,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 24576,
     "disk_gb" => 100,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -509,7 +432,6 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 49152,
     "disk_gb" => 100,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
     }
   },
@@ -518,58 +440,7 @@ default['bcpc']['flavors'] = {
     "memory_mb" => 98304,
     "disk_gb" => 100,
     "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "no",
       "aggregate_instance_extra_specs:general_compute" => "yes",
-    }
-  },
-  "nondurable2.small" => {
-    "vcpus" => 1,
-    "memory_mb" => 6144,
-    "disk_gb" => 50,
-    "ephemeral_gb" => 50,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable2.medium" => {
-    "vcpus" => 2,
-    "memory_mb" => 12288,
-    "disk_gb" => 100,
-    "ephemeral_gb" => 100,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable2.large" => {
-    "vcpus" => 4,
-    "memory_mb" => 24576,
-    "disk_gb" => 100,
-    "ephemeral_gb" => 200,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable2.xlarge" => {
-    "vcpus" => 8,
-    "memory_mb" => 49152,
-    "disk_gb" => 100,
-    "ephemeral_gb" => 320,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
-    }
-  },
-  "nondurable2.2xlarge" => {
-    "vcpus" => 16,
-    "memory_mb" => 98304,
-    "disk_gb" => 100,
-    "ephemeral_gb" => 320,
-    "extra_specs" => {
-      "aggregate_instance_extra_specs:ephemeral_compute" => "yes",
-      "aggregate_instance_extra_specs:general_compute" => "no",
     }
   }
 }
@@ -583,18 +454,11 @@ default['bcpc']['flavor_access'] = { }
 
 default['bcpc']['host_aggregates'] = {
   "general_compute" => {
-    "ephemeral_compute" => "no",
     "general_compute" => "yes",
-    "maintenance" => "no"
-  },
-  "ephemeral_compute" => {
-    "ephemeral_compute" => "yes",
-    "general_compute" => "no",
     "maintenance" => "no"
   },
   "maintenance" => {
     "general_compute" => "no",
-    "ephemeral_compute" => "no",
     "maintenance" => "yes"
   }
 }

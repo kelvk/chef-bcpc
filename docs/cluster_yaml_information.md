@@ -28,7 +28,7 @@ nodes:
     role: work
     cobbler_profile: bcpc_host_other_profile
 ```
-* Valid roles are: **bootstrap**, **head**, **work**, **work-ephemeral**, or **reserved**.
+* Valid roles are: **bootstrap**, **head**, **work**, or **reserved**.
 * The MAC address is used by Cobbler for PXE booting.
 * The hardware type is interpolated into the string **BCPC-Hardware-[hardware_type]** when selecting a role to represent the node's hardware type.
 * The Cobbler profiles must be present or `enroll_cobbler.py` will fail (see `attributes/cobbler.rb` for how to set up your environment to create these Cobbler entities).

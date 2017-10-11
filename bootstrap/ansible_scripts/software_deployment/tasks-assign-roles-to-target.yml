@@ -27,11 +27,6 @@
       when: "'diskless-worknodes' in group_names"
       delegate_to: "{{ groups['bootstraps'][0] }}"
 
-    - name: Add role for ephemeral work node
-      command: knife node run_list add {{ hostfqdn.stdout }} 'role[BCPC-EphemeralWorknode]'
-      when: "'ephemeral-worknodes' in group_names"
-      delegate_to: "{{ groups['bootstraps'][0] }}"
-
     - name: Add role for alerting node
       command: knife node run_list add {{ hostfqdn.stdout }} 'role[BCPC-Alerting]'
       when: "'alerting' in group_names"

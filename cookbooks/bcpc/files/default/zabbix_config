@@ -12,7 +12,6 @@ templates = ['/tmp/zabbix_linux_active_template.xml',
              '/tmp/zabbix_s3_template.xml']
 groups = ['BCPC-Headnode',
           'BCPC-Worknode',
-          'BCPC-EphemeralWorknode',
           'BCPC-DisklessWorknode',
           'BCPC-CephOSDNode',
           'BCPC-CephMonitorNode',

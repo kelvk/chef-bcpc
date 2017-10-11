@@ -2,4 +2,4 @@
 - include: ../common_playbooks/validate_environment.yml
 
 - include: tasks-chef-target.yml target=headnodes serial=1
-- include: tasks-chef-target.yml target=worknodes:ephemeral-worknodes serial=20%
+- include: tasks-chef-target.yml target=worknodes serial=20%

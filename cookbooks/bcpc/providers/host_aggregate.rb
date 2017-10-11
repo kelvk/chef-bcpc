@@ -60,7 +60,7 @@ action :create do
         ha_fields.select {|x| x['Field'] == "properties"}[0]["Value"]
       else
         # in Mitaka properties are expressed as a string for some reason, e.g.
-        # "ephemeral_compute='no', general_compute='yes', maintenance='no'"
+        # general_compute='yes', maintenance='no'"
         ha_fields['properties'].split(', ').each_with_object({}) do |x, memo|
           memo[x.split('=')[0]] = x.split('=')[1].gsub(/'/,'')
         end

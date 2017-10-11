@@ -34,29 +34,10 @@ ipmi_password={{ cluster_ipmi_password }}
 [{{ cluster_name }}-cluster:children]
 {{ cluster_name }}-headnodes
 {{ cluster_name }}-worknodes
-{{ cluster_name }}-ephemeral-worknodes
 {{ cluster_name }}-diskless-worknodes
 
 [{{ cluster_name }}-worknodes]
 {% for item in worknodes|dictsort %}
-{% set node = item[0] + " ansible_ssh_host=" + item[1].ip_address %}
-{% if item[1].ipmi_address %}
-{% set node = node + " ipmi_address=" + item[1].ipmi_address %}
-{% if not cluster_ipmi_username %}
-{% set node = node + " ipmi_username=" + item[1].ipmi_username %}
-{% endif %}
-{% if not cluster_ipmi_password %}
-{% set node = node + " ipmi_password=" + item[1].ipmi_password %}
-{% endif %}
-{% endif %}
-{% if not cluster_hardware_type %}
-{% set node = node + " hardware_type=" + item[1].hardware_type %}
-{% endif %}
-{{ node }}
-{% endfor %}
-
-[{{ cluster_name }}-ephemeral-worknodes]
-{% for item in eworknodes|dictsort %}
 {% set node = item[0] + " ansible_ssh_host=" + item[1].ip_address %}
 {% if item[1].ipmi_address %}
 {% set node = node + " ipmi_address=" + item[1].ipmi_address %}
@@ -157,7 +138,6 @@ ipmi_password={{ cluster_ipmi_password }}
 [cluster:children]
 headnodes
 worknodes
-ephemeral-worknodes
 
 [bootstraps:children]
 {{ cluster_name }}-bootstraps
@@ -167,9 +147,6 @@ ephemeral-worknodes
 
 [worknodes:children]
 {{ cluster_name }}-worknodes
-
-[ephemeral-worknodes:children]
-{{ cluster_name }}-ephemeral-worknodes
 
 [diskless-worknodes:children]
 {{ cluster_name }}-diskless-worknodes
@@ -248,7 +225,6 @@ def render_inventory(path, ssh_user, opts={}):
     bootstraps = {}
     headnodes = {}
     worknodes = {}
-    eworknodes = {}
     dworknodes = {}
     cluster_hardware_type = None
     cluster_ipmi_username = None
@@ -266,8 +242,6 @@ def render_inventory(path, ssh_user, opts={}):
             headnodes[node] = cluster['nodes'][node]
         elif cluster['nodes'][node]['role'] == 'work':
             worknodes[node] = cluster['nodes'][node]
-        elif cluster['nodes'][node]['role'] == 'work-ephemeral':
-            eworknodes[node] = cluster['nodes'][node]
         elif cluster['nodes'][node]['role'] == 'work-diskless':
             dworknodes[node] = cluster['nodes'][node]
         # Do the grouping here
@@ -308,7 +282,6 @@ def render_inventory(path, ssh_user, opts={}):
         'bootstraps': bootstraps,
         'headnodes': headnodes,
         'worknodes': worknodes,
-        'eworknodes': eworknodes,
         'dworknodes': dworknodes,
         'group_map': group_map,
         'group_opts_map': g_opts

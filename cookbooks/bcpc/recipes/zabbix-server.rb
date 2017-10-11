@@ -221,7 +221,7 @@ if node['bcpc']['enabled']['monitoring'] then
         end
     end
 
-    %w( Bootstrap EphemeralWorknode Worknode ).each do |metadata|
+    %w( Bootstrap Worknode ).each do |metadata|
       bcpc_zbx_autoreg "BCPC-#{metadata}" do
         action :create
       end

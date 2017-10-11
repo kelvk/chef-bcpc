@@ -9,7 +9,7 @@
       target hosts or host groups on which to execute. Do so by specifying
       the --extra-args/-e switch with the target variable and a list of
       host or host groups, separated by colons (e.g.,
-      headnodes:worknodes:ephemeral-worknodes).
+      headnodes:worknodes).
   vars_prompt:
     - name: "acknowledge_danger"
       prompt: "Please acknowledge that you understand this playbook is dangerous by typing YES"

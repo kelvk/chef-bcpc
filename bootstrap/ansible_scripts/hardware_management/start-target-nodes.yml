@@ -69,13 +69,6 @@
       tags:
         - start
 
-    - name: Get hosts in ephemeral compute aggregate
-      shell: ". /root/adminrc && nova aggregate-details ephemeral_compute"
-      register: ephemeral_compute_agg
-      delegate_to: "{{ control_headnode }}"
-      tags:
-        - start
-
     # attempt to power on the hypervisor via IPMI
     - name: Get power state of hypervisor
       command: ipmitool -H {{ ipmi_address }} -I lanplus -U {{ ipmi_username }} -P {{ ipmi_password }} chassis power status
@@ -162,13 +155,6 @@
     - name: Add node back to general compute aggregate
       shell: ". /root/adminrc && nova aggregate-add-host general_compute {{ inventory_hostname }}"
       when: (general_compute_agg.stdout | search("{{ inventory_hostname }}")) and (not chef_after_reboot_internal)
-      delegate_to: "{{ control_headnode }}"
-      tags:
-        - start
-
-    - name: Add node back to ephemeral compute aggregate
-      shell: ". /root/adminrc && nova aggregate-add-host ephemeral_compute {{ inventory_hostname }}"
-      when: (ephemeral_compute_agg.stdout | search("{{ inventory_hostname }}")) and (not chef_after_reboot_internal)
       delegate_to: "{{ control_headnode }}"
       tags:
         - start

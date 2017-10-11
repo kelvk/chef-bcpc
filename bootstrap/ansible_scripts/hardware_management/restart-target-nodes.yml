@@ -86,27 +86,11 @@
       tags:
         - stopstart
 
-    - name: Get hosts in ephemeral compute aggregate
-      shell: ". /root/adminrc && nova aggregate-details ephemeral_compute"
-      register: ephemeral_compute_agg
-      delegate_to: "{{ control_headnode }}"
-      tags:
-        - stopstart
-
     - name: Remove node from general compute aggregate
       shell: ". /root/adminrc && nova aggregate-remove-host general_compute {{ inventory_hostname }}"
       when: general_compute_agg.stdout | search("{{ inventory_hostname }}")
       register: general_compute_agg_remove
       failed_when: general_compute_agg_remove.rc != 0 and "404" not in general_compute_agg_remove.stderr
-      delegate_to: "{{ control_headnode }}"
-      tags:
-        - stopstart
-
-    - name: Remove node from ephemeral compute aggregate
-      shell: ". /root/adminrc && nova aggregate-remove-host ephemeral_compute {{ inventory_hostname }}"
-      when: ephemeral_compute_agg.stdout | search("{{ inventory_hostname }}")
-      register: ephemeral_compute_agg_remove
-      failed_when: ephemeral_compute_agg_remove.rc != 0 and "404" not in ephemeral_compute_agg_remove.stderr
       delegate_to: "{{ control_headnode }}"
       tags:
         - stopstart
@@ -187,13 +171,6 @@
     - name: Add node back to general compute aggregate
       shell: ". /root/adminrc && nova aggregate-add-host general_compute {{ inventory_hostname }}"
       when: (general_compute_agg.stdout | search("{{ inventory_hostname }}")) and (not chef_after_reboot_internal)
-      delegate_to: "{{ control_headnode }}"
-      tags:
-        - stopstart
-
-    - name: Add node back to ephemeral compute aggregate
-      shell: ". /root/adminrc && nova aggregate-add-host ephemeral_compute {{ inventory_hostname }}"
-      when: (ephemeral_compute_agg.stdout | search("{{ inventory_hostname }}")) and (not chef_after_reboot_internal)
       delegate_to: "{{ control_headnode }}"
       tags:
         - stopstart

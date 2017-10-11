@@ -39,5 +39,5 @@ nodes:
     ipmi_username: null
     ipmi_password: null
     mac_address: null
-    role: work-ephemeral
+    role: work
     cobbler_profile: bcpc_host

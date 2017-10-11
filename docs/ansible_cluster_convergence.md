@@ -47,7 +47,7 @@ ansible-playbook -i inventory-file -k -K -e 'ansible_ssh_user=ubuntu' software_d
 ```
 ansible-playbook -i inventory-file -e target=xxxx software_deployment/enroll-target-in-chef-server.yml
 ```
-  * `target=xxxx` is an Ansible host pattern, like **headnodes**, **worknodes:ephemeral-worknodes**, or a specific node name.
+  * `target=xxxx` is an Ansible host pattern, like **headnodes**, **worknodes**, or a specific node name.
 * Assign a node's hardware role and cluster role using `software_deployment/assign-roles-to-target.yml`.
   * This playbook will work out the appropriate role based on the hostgroup the node is in, so if a node is in multiple hostgroups Weird Things will happen (i.e., don't put a node in both **[xxxx:headnodes]** and **[xxxx:worknodes]** in the inventory).
   * **NOTE**: do not set the head node role on more than one uncheffed head node at a time, because this will cause failures in Chef resources that use node searches.

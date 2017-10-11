@@ -208,10 +208,6 @@ api_insecure=True
 
 [libvirt]
 # Always boot nova VMs from RBD
-<% if node['bcpc']['nova']['ephemeral'] %>
-images_type=lvm
-images_volume_group=<%= node['bcpc']['nova']['ephemeral_vg_name'] %>
-<% else %>
 images_type=rbd
 images_rbd_pool=<%=node['bcpc']['ceph']['vms']['name']%>
 images_rbd_ceph_conf=/etc/ceph/ceph.conf
@@ -224,7 +220,6 @@ inject_key=false
 inject_partition=-2
 # Set flags for libvirt live migration
 live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
-<% end %>
 virt_type=<%=node['bcpc']['virt_type']%>
 use_virtio_for_bridges=True
 hw_disk_discard = unmap

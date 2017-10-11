@@ -12,12 +12,9 @@ Test-Laptop-Ansible-cluster
 [Test-Laptop-Ansible-cluster:children]
 Test-Laptop-Ansible-headnodes
 Test-Laptop-Ansible-worknodes
-Test-Laptop-Ansible-ephemeral-worknodes
 
 [Test-Laptop-Ansible-worknodes]
 bcpc-vm2 ansible_host=10.0.100.12
-
-[Test-Laptop-Ansible-ephemeral-worknodes]
 bcpc-vm3 ansible_host=10.0.100.13
 
 [Test-Laptop-Ansible-headnodes]
@@ -29,7 +26,6 @@ ansible-bcpc-bootstrap ansible_host=10.0.100.3
 [cluster:children]
 headnodes
 worknodes
-ephemeral-worknodes
 
 [bootstraps:children]
 Test-Laptop-Ansible-bootstraps
@@ -39,6 +35,3 @@ Test-Laptop-Ansible-headnodes
 
 [worknodes:children]
 Test-Laptop-Ansible-worknodes
-
-[ephemeral-worknodes:children]
-Test-Laptop-Ansible-ephemeral-worknodes

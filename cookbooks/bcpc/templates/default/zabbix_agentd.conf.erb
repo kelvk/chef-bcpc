@@ -193,8 +193,6 @@ Hostname=<%=node['hostname']%>
 #   Sets a metadata value for auto host registration.
 <% if node['roles'].include? 'BCPC-Headnode' -%>
 HostMetadata=BCPC-Headnode
-<% elsif node['roles'].include? 'BCPC-EphemeralWorknode' -%>
-HostMetadata=BCPC-EphemeralWorknode
 <% elsif node['roles'].include? 'BCPC-Worknode' -%>
 HostMetadata=BCPC-Worknode
 <% elsif node['roles'].include? 'BCPC-Bootstrap' -%>

@@ -156,7 +156,7 @@ function get_node_role {
   elif [[ $1 == 'ansible-bcpc-vm2' ]]; then
     echo 'work'
   elif [[ $1 == "ansible-bcpc-vm3" ]]; then
-    echo 'work-ephemeral'
+    echo 'work'
   else
     echo 'reserved'
   fi
