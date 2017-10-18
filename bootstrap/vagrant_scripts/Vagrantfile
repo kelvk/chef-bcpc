@@ -4,6 +4,7 @@
 
 require 'openssl' # used to validate CA certificates
 require 'uri' # used to parse the local mirror if one is given
+require 'json' # used to parse cluster machines configuration
 
 Vagrant.require_version ">= 1.7.0"
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
@@ -176,36 +177,40 @@ $add_swap_script = <<-EOH
 EOH
 
 Vagrant.configure("2") do |config|
-  # build list of all machines to provision at once
-  cluster_nodes = 3
-  monitoring_node_count = ENV['MONITORING_NODES'].to_i
-  # nil.to_i is 0, so no need to check for nil explicitly
-  unless monitoring_node_count == 0
-    if (1..3).include? monitoring_node_count
-      cluster_nodes += monitoring_node_count
-    else
-      fail "Invalid number of monitoring nodes specified (1-3 allowed)"
-    end
-  end
-  # ENV['CLUSTER_NODE_COUNT_OVERRIDE'] is a safety valve used by vagrant_clean.sh
-  # to always clean up the maximal count of VMs (e.g., try to clean monitoring
-  # nodes even if the script isn't sure any were made)
-  if ENV['CLUSTER_NODE_COUNT_OVERRIDE'].to_i > 0
-    cluster_nodes = ENV['CLUSTER_NODE_COUNT_OVERRIDE'].to_i
-    # puts "Cluster node count is being overridden to #{cluster_nodes} via CLUSTER_NODE_COUNT_OVERRIDE"
-  end
+  cluster_config = File.join(config_path, ENV['CLUSTER'] + '.json')
+  cluster = JSON.parse(File.read(cluster_config))
+  bootstrap_node = cluster['nodes']['bcpc-dev-bootstrap']['ip_address']
 
-  vms_to_build = ['vm-bootstrap', (1..cluster_nodes).collect {|x| "vm#{x}"}].flatten
-
-  vms_to_build.each_with_index do |vm, idx|
+  cluster['nodes'].each do |node, key|
+    vm = node
+    # Remove name prefix for shorter Vagrant hostnames
+    vm = vm.sub('bcpc-dev-', '')
+    config.ssh.forward_x11 = true
     config.vm.define vm do |m|
-      # use .3 as the final octet for the bootstrap node, otherwise 11, 12, etc.
-      final_octet = (vm == 'vm-bootstrap' ? 3 : 10+idx)
       bootstrap_domain = (ENV['BCPC_HYPERVISOR_DOMAIN'] or "bcpc.example.com")
-      m.vm.hostname = "bcpc-#{vm}.#{bootstrap_domain}"
-      m.vm.network :private_network, ip: "10.0.100.#{final_octet}", netmask: "255.255.255.0", adapter_ip: "10.0.100.2"
-      m.vm.network :private_network, ip: "172.16.100.#{final_octet}", netmask: "255.255.255.0", adapter_ip: "172.16.100.2"
-      m.vm.network :private_network, ip: "192.168.100.#{final_octet}", netmask: "255.255.255.0", adapter_ip: "192.168.100.2"
+      m.vm.hostname = "bcpc-dev-#{vm}.#{bootstrap_domain}"
+      m.vm.network :private_network,
+                   virtualbox__intnet: 'management',
+                   ip: cluster['nodes'][node]['ip_address'],
+                   netmask: '255.255.255.240'
+      ['storage', 'tenant'].each do |network|
+        m.vm.network :private_network,
+                     virtualbox__intnet: network,
+                     auto_config: false
+      end
+
+      # reconfigure eth0 as static to remove default route via Virtualbox NAT
+      config.vm.provision "delete-default-gw-on-eth0", type: "shell",
+        run: "always",
+        path: 'reconfigure-eth0-on-vms.sh',
+        privileged: true
+
+      # add temporary default router to faciliate convergence without virtual
+      # router
+      config.vm.provision "add-default-gw", type: "shell",
+        run: "always",
+        inline: "route add default gw #{cluster['nodes'][node]['gateway']}"
+
       if ENV['REPO_ROOT'].nil? or ENV['REPO_MOUNT_POINT'].nil?
         fail "REPO_ROOT and REPO_MOUNT_POINT must be set in the environment."
       end
@@ -244,7 +249,7 @@ Vagrant.configure("2") do |config|
 
       # from bootstrap node only: test proxy servers from inside to determine whether
       # everything's set up properly
-      if vm == 'vm-bootstrap'
+      if vm == 'bootstrap'
         m.vm.provision "testing-proxy-servers", type: "shell" do |s|
           s.privileged = false
           s.inline = $testing_proxy_servers_script
@@ -258,7 +263,7 @@ Vagrant.configure("2") do |config|
 
       # configure a hostfile entry with the IP of the bootstrap node (for Chef)
       m.vm.provision "configure-bootstrap-hostfile-entry", type: "shell" do |s|
-        s.inline = "echo -e '10.0.100.3\tbcpc-vm-bootstrap.#{bootstrap_domain}\n' >> /etc/hosts"
+        s.inline = "echo -e '#{bootstrap_node}\tbcpc-dev-bootstrap.#{bootstrap_domain}\n' >> /etc/hosts"
       end
 
       # clean up some packages installed in this image by default
@@ -274,7 +279,7 @@ Vagrant.configure("2") do |config|
       m.vm.box = "trusty64"
       m.vm.box_url = "#{ENV['BOOTSTRAP_CACHE_DIR']}/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
-      if vm == 'vm-bootstrap'
+      if vm == 'bootstrap'
         memory = ( ENV["BOOTSTRAP_VM_MEM"] or "2048" )
         cpus = ( ENV["BOOTSTRAP_VM_CPUS"] or "2" )
       else
@@ -284,7 +289,7 @@ Vagrant.configure("2") do |config|
       end
 
       m.vm.provider :virtualbox do |vb|
-        vb.name = "bcpc-#{vm}"
+        vb.name = node
         vb.memory = memory
         vb.cpus = cpus
 
@@ -310,7 +315,7 @@ Vagrant.configure("2") do |config|
           fail "Unable to locate VM #{vm} on disk, terminating"
         end
 
-        if idx.zero?
+        if vm == 'bootstrap'
           # on the bootstrap node these disks are not used by pure Vagrant, but will be used by Ansible scripts
           # sdb is /mnt and sdc is /bcpc
           disks = {'b' => ( ENV["BOOTSTRAP_VM_DRIVE_SIZE"] or "20480" ), 'c' => 204800}

@@ -11,9 +11,9 @@ cd "$REPO_ROOT"/bootstrap/vagrant_scripts
 
 KNIFE=/opt/opscode/embedded/bin/knife
 # Dump the data bag contents to a variable.
-DATA_BAG=$(vagrant ssh vm-bootstrap -c "$KNIFE data bag show configs $BOOTSTRAP_CHEF_ENV -F yaml")
+DATA_BAG=$(vagrant ssh bootstrap -c "$KNIFE data bag show configs $BOOTSTRAP_CHEF_ENV -F yaml")
 # Get the management VIP.
-MANAGEMENT_VIP=$(vagrant ssh vm-bootstrap -c "$KNIFE environment show $BOOTSTRAP_CHEF_ENV -a override_attributes.bcpc.management.vip | tail -n +2 | awk '{ print \$2 }'")
+MANAGEMENT_VIP=$(vagrant ssh bootstrap -c "$KNIFE environment show $BOOTSTRAP_CHEF_ENV -a override_attributes.bcpc.management.vip | tail -n +2 | awk '{ print \$2 }'")
 
 # this is highly naive for obvious reasons (will break on multi-line keys, spaces)
 # but is sufficient for the items to be extracted here

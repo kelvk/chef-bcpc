@@ -6,6 +6,9 @@
 # USED BY BOTH ANSIBLE AND VAGRANT BUILD PATHS
 ##############################################
 
+# Sets the cluster configuration to load
+export CLUSTER=multihead
+
 # Sets the amount of memory (in MB) given to the bootstrap VM.
 export BOOTSTRAP_VM_MEM=2048
 

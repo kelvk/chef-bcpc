@@ -30,7 +30,7 @@ if [[ -d "$BUILD_CACHE_DIR" ]]; then
 fi
 
 # Install tools needed for packaging
-apt-get -y install git ruby-dev make pbuilder python-mock python-configobj python-support cdbs python-all-dev python-stdeb libmysqlclient-dev libldap2-dev libxml2-dev libxslt1-dev libpq-dev build-essential libssl-dev libffi-dev python-dev python-pip
+apt-get -y install git ruby-dev make pbuilder python-mock python-configobj python-support cdbs python-all-dev python-stdeb libmysqlclient-dev libldap2-dev libxml2-dev libxslt1-dev libpq-dev build-essential libssl-dev libffi-dev python-dev python-pip jq
 
 # install fpm and support gems
 if [[ -z "$(gem list --local fpm | awk '/fpm/ {print $1}')" ]]; then
