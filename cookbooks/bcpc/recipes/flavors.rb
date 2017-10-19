@@ -24,13 +24,23 @@ end
 node['bcpc']['flavors'].each do |name, flavor|
   bcpc_osflavor name do
     memory_mb flavor['memory_mb']
-    disk_gb   flavor['disk_gb']
-    vcpus  flavor['vcpus']
-    ephemeral_gb flavor['ephemeral_gb']
-    swap_gb flavor['swap_gb']
-    is_public flavor['is_public'] or true
-    flavor_id flavor['id'] or "auto"
-    extra_specs flavor["extra_specs"]
+    disk_gb flavor['disk_gb']
+    vcpus flavor['vcpus']
+    if flavor['ephemeral_gb']
+      ephemeral_gb flavor['ephemeral_gb']
+    end
+    if flavor['swap_gb']
+      swap_gb flavor['swap_gb']
+    end
+    if flavor['is_public']
+      is_public flavor['is_public']
+    end
+    if flavor['id']
+      flavor_id flavor['id']
+    end
+    if flavor['extra_specs']
+      extra_specs flavor['extra_specs']
+    end
   end
 end
 
