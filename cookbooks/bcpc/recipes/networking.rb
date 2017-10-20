@@ -103,7 +103,7 @@ bash "setup-interfaces-source" do
     code <<-EOH
         echo "source /etc/network/interfaces.d/iface-*" >> /etc/network/interfaces
     EOH
-    not_if "grep '^source /etc/network/interfaces.d/' /etc/network/interfaces"
+    not_if "grep '^source /etc/network/interfaces.d/iface-' /etc/network/interfaces"
 end
 
 [['management', 100], ['storage', 300]].each do |net, metric|
