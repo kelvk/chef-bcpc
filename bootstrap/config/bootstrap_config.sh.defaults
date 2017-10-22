@@ -7,7 +7,7 @@
 ##############################################
 
 # Sets the cluster configuration to load
-export CLUSTER=multihead
+export CLUSTER=singlehead
 
 # Sets the amount of memory (in MB) given to the bootstrap VM.
 export BOOTSTRAP_VM_MEM=2048
