@@ -97,3 +97,8 @@ done
 do_on_node bootstrap "cd $REPO_MOUNT_POINT \
   && sudo bash -c 'export REPO_MOUNT_POINT=$REPO_MOUNT_POINT \
   && bootstrap/shared/shared_configure_chef_clients.sh'"
+
+# Run chef-client on nodes if we want auto-convergence
+if [[ $BOOTSTRAP_CHEF_DO_CONVERGE -eq 1 ]]; then
+  "$REPO_ROOT"/bootstrap/shared/shared_converge_chef.sh
+fi
