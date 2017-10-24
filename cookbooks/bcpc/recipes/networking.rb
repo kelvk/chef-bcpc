@@ -2,7 +2,7 @@
 # Cookbook Name:: bcpc
 # Recipe:: networking
 #
-# Copyright 2013, Bloomberg Finance L.P.
+# Copyright 2017, Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -225,66 +225,12 @@ end
 
 end
 
-bash "routing-management" do
-    user "root"
-    code "echo '1 mgmt' >> /etc/iproute2/rt_tables"
-    not_if "grep -e '^1 mgmt' /etc/iproute2/rt_tables"
-end
-
-bash "routing-storage" do
-    user "root"
-    code "echo '2 storage' >> /etc/iproute2/rt_tables"
-    not_if "grep -e '^2 storage' /etc/iproute2/rt_tables"
-end
-
-if node['bcpc']['monitoring']['provider']
-    function = 'ipset-monitoring'
-    # ipset is used to maintain largish block(s) of IP addresses to be referred to
-    # by iptables
-    package "ipset"
-
-    # Insert numbering so it runs before /etc/network/if-up.d/bcpc-firewall
-    template "/etc/network/if-up.d/001bcpc-#{function}" do
-        mode 00775
-        source "bcpc-#{function}.erb"
-        notifies :run, "execute[run-#{function}-script]", :delayed
-    end
-
-    template "/etc/#{function}-clients.conf" do
-        mode 00600
-        source "#{function}-clients.conf.erb"
-        variables(
-            :clients => node['bcpc']['monitoring']['external_clients'].sort
-        )
-        notifies :run, "execute[run-#{function}-script]", :immediately
-    end
-
-    execute "run-#{function}-script" do
-        action :nothing
-        command "/etc/network/if-up.d/001bcpc-#{function}"
-    end
-
-end
-
-network_functions = %w(firewall)
-network_functions += ['routing'] unless node['bcpc']['enabled']['neutron']
-
-network_functions.each do |function|
-    template "/etc/network/if-up.d/bcpc-#{function}" do
-        mode 00775
-        source "bcpc-#{function}.erb"
-        notifies :run, "execute[run-#{function}-script-once]", :immediately
-    end
-
-    execute "run-#{function}-script-once" do
-        action :nothing
-        command "/etc/network/if-up.d/bcpc-#{function}"
-    end
-end
-
-
 bash "disable-noninteractive-pam-logging" do
     user "root"
     code "sed --in-place 's/^\\(session\\s*required\\s*pam_unix.so\\)/#\\1/' /etc/pam.d/common-session-noninteractive"
     only_if "grep -e '^session\\s*required\\s*pam_unix.so' /etc/pam.d/common-session-noninteractive"
+end
+
+unless search_nodes('role', 'BCPC-Bootstrap').include?(node)
+  include_recipe 'bcpc::networking_functions'
 end
