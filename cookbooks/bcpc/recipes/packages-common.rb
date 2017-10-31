@@ -18,6 +18,12 @@
 
 # This recipe installs OS packages which are required by all node types.
 
+bash 'remove-foreign-arch' do
+  user 'root'
+  code 'dpkg --remove-architecture i386'
+  only_if 'dpkg --print-foreign-architecture | grep i386'
+end
+
 # run apt-get update at the start of every Chef run if so configured
 if node['bcpc']['enabled']['always_update_package_lists'] then
   bash "run-apt-get-update" do
