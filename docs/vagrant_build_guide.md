@@ -10,9 +10,9 @@ Minimum Prerequisites
 * 100 GB of free disk space
 * Vagrant 1.7 or better ([https://www.vagrantup.com](https://www.vagrantup.com))
 * VirtualBox 4.3 or better (5.0+ recommended) ([https://www.virtualbox.org](https://www.virtualbox.org))
-* Git, curl, rsync, ssh
+* Git, curl, rsync, ssh, jq
 
-On OS X, installing [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) from the Mac App Store and then installing Xcode's command-line tools from within Xcode will provide Git. On Linux, please consult documentation for your particular distribution to install any missing prerequisites via `apt-get`, `yum`, or another distribution-specific package manager.
+On OS X, installing [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) from the Mac App Store and then installing Xcode's command-line tools from within Xcode will provide Git. You will need [Homebrew](https://brew.sh/) to install `jq`. On Linux, please consult documentation for your particular distribution to install any missing prerequisites via `apt-get`, `yum`, or another distribution-specific package manager.
 
 Preparation
 ---
