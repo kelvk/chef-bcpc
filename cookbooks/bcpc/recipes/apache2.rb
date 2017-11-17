@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-%w{apache2 libapache2-mod-fastcgi libapache2-mod-wsgi}.each do |pkg|
+%w{apache2 libapache2-mod-fastcgi libapache2-mod-wsgi apache2-utils}.each do |pkg|
     package pkg do
         action :upgrade
     end
