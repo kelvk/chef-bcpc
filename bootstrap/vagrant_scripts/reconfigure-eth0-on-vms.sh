@@ -7,4 +7,4 @@ iface eth0 inet static
 "
 
 echo "$ETH0" > /etc/network/interfaces.d/eth0.cfg
-ifdown eth0 && ifup eth0 && killall -TERM dhclient
+ifdown eth0 && ifup eth0 && killall -TERM dhclient || true
