@@ -237,6 +237,7 @@ cpu_model = <%= node['bcpc']['nova']['cpu_config']['cpu_model'] %>
 <% end %>
 <% end %>
 
-[oslo_cache]
+[cache]
 enabled = true
-memcached_servers=<%=@servers.map{|x| x['bcpc']['management']['ip'] + ":11211"}.join(",")%>
+backend = oslo_cache.memcache_pool
+memcache_servers=<%=@servers.map{|x| x['bcpc']['management']['ip'] + ":11211"}.join(",")%>
