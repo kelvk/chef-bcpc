@@ -180,7 +180,15 @@ Vagrant.configure("2") do |config|
   cluster_config = File.join(config_path, ENV['CLUSTER'] + '.json')
   cluster = JSON.parse(File.read(cluster_config))
   bootstrap_node = cluster['nodes']['bcpc-dev-bootstrap']['ip_address']
-
+  # Define the network names (random) here. There will be 3 classes of networks:
+  #   - management
+  #   - storage
+  #   - tenant
+  networks = {
+    management: SecureRandom.uuid,
+    storage: SecureRandom.uuid,
+    tenant: SecureRandom.uuid,
+  }
   cluster['nodes'].each do |node, key|
     vm = node
     # Remove name prefix for shorter Vagrant hostnames
@@ -190,10 +198,10 @@ Vagrant.configure("2") do |config|
       bootstrap_domain = (ENV['BCPC_HYPERVISOR_DOMAIN'] or "bcpc.example.com")
       m.vm.hostname = "bcpc-dev-#{vm}.#{bootstrap_domain}"
       m.vm.network :private_network,
-                   virtualbox__intnet: 'management',
+                   virtualbox__intnet: networks[:management],
                    ip: cluster['nodes'][node]['ip_address'],
                    netmask: '255.255.255.240'
-      ['storage', 'tenant'].each do |network|
+      [networks[:storage], networks[:tenant]].each do |network|
         m.vm.network :private_network,
                      virtualbox__intnet: network,
                      auto_config: false
