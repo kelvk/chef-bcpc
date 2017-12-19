@@ -9,6 +9,15 @@ require 'json' # used to parse cluster machines configuration
 Vagrant.require_version ">= 1.7.0"
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 
+# Load some other vagrantfiles, user libs
+current_dir = File.expand_path File.dirname(__FILE__)
+libdir = File.join current_dir, 'lib'
+Dir.foreach(libdir) {|f|
+  # Check extensions?
+  libpath = File.join libdir, f
+  load libpath if File.ftype(libpath) == 'file'
+}
+
 # if being run via BOOT_GO.sh, ENV['REPO_ROOT'] will be the root of the repo;
 # if it is not set, set it ourselves
 ENV['REPO_ROOT'] ||= %x{git rev-parse --show-toplevel}.strip
@@ -184,10 +193,18 @@ Vagrant.configure("2") do |config|
   #   - management
   #   - storage
   #   - tenant
+  # Attempt to get from cluster configuration file or generate if absent
+  netname = Proc.new {|label|
+    begin
+      cluster['networks'][label]['name']
+    rescue
+      nil
+    end
+  }
   networks = {
-    management: SecureRandom.uuid,
-    storage: SecureRandom.uuid,
-    tenant: SecureRandom.uuid,
+    management: netname['management'] || generate_network_name('management'),
+    storage: netname['storage'] || generate_network_name('storage'),
+    tenant: netname['tenant'] || generate_network_name('tenant'),
   }
   cluster['nodes'].each do |node, key|
     vm = node
