@@ -35,7 +35,14 @@ KEYSTONE_ADMIN_PASSWORD=$(extract_value 'keystone-admin-password')
 echo "------------------------------------------------------------"
 echo "Everything looks like it's been installed successfully!"
 echo
-echo "Access the BCPC landing page at https://$MANAGEMENT_VIP"
+echo "Setup SSH tunnel to access BCPC sites:"
+echo "./vagrant_tunnel.sh"
+echo
+echo "Sites are reachable via tunnel at:"
+echo "Horizon: https://localhost:8443/horizon/"
+echo "HAProxy: https://localhost:8443/haproxy/"
+echo "RabbitMQ: https://localhost:8443/rabbitmq/"
+echo
 echo "Use these users and passwords to access the different resources:"
 echo
 echo "Horizon: $KEYSTONE_ADMIN_USER / $KEYSTONE_ADMIN_PASSWORD"
